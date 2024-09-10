@@ -11,6 +11,7 @@ import {
 } from '@clerk/nextjs'
 
 import { ModalProvider } from "@/providers/modal-provider";
+import prismadb from "@/lib/prismadb";
 
 
 
@@ -35,6 +36,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const store = prismadb.store
   return (
     <ClerkProvider afterSignOutUrl="/">
       <html lang="en">
