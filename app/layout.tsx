@@ -12,6 +12,7 @@ import {
 
 import { ModalProvider } from "@/providers/modal-provider";
 import prismadb from "@/lib/prismadb";
+import { ToasterProvider } from "@/providers/toast-provider";
 
 
 
@@ -42,6 +43,7 @@ export default function RootLayout({
     <ClerkProvider afterSignOutUrl="/">
       <html lang="en">
         <body>
+          <ToasterProvider />
           <ModalProvider />
           <SignedOut>
             <SignInButton />

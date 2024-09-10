@@ -27,7 +27,7 @@ export async function POST(req: Request)
                 userId
             }
         })
-
+        return NextResponse.json(store)
     } catch (error){
         console.log('[STORES_POST]', error);
         return new NextResponse(
