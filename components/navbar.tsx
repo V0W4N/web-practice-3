@@ -1,6 +1,5 @@
-'use client';
 
-import { SignedIn, SignedOut, SignInButton } from "@clerk/clerk-react";
+
 import { UserButton } from "@clerk/nextjs";
 import { MainNav } from "@/components/main-nav";
 import StoreSwitcher from "./store-switcher";
@@ -33,13 +32,7 @@ const Navbar = async () => {
             </div>
             <MainNav className="mx-6"/>
             <div className="ml-auto flex items-center space-x-4">
-                
-                <SignedOut>
-                    <SignInButton />
-                </SignedOut>
-                <SignedIn>
-                    <UserButton />
-                </SignedIn>
+                <UserButton />
             </div>
         </div> 
     </div> 
