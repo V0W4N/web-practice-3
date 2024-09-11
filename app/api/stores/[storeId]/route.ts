@@ -10,7 +10,7 @@ export async function PATCH(req: Request,
         const body = await req.json();
 
         const {name} = body;
-
+        
         if (!userId){
             return new NextResponse("Unauthenticated", {status: 401})
         }
@@ -28,7 +28,7 @@ export async function PATCH(req: Request,
                 id: params.storeId,
                 userId
             },
-            data:{
+            data: {
                 name
             }
         })
@@ -41,7 +41,7 @@ export async function PATCH(req: Request,
 }
 
 
-export async function DELETE(req: Request,
+export async function DELETE(_req: Request,
     {params}: {params: {storeId: string}}
 ) {
     try{
