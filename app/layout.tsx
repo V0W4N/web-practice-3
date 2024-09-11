@@ -45,12 +45,6 @@ export default function RootLayout({
         <body>
           <ToasterProvider />
           <ModalProvider />
-          <SignedOut>
-            <SignInButton />
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
           {children}
         </body>
       </html>
