@@ -1,3 +1,5 @@
+'use client'
+
 import { Copy, Server } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "./alert";
 import { Badge, BadgeProps } from "./badge";
@@ -36,7 +38,7 @@ export const ApiAlert: React.FC<ApiAlertProps> =({
             <Server className="h-4 w-4"/>
             <AlertTitle>
                 {title}
-                <Badge variant={variantMap[variant]}>
+                <Badge variant={variantMap[variant]} className="ml-2">
                     {textMap[variant]}
                 </Badge>
             </AlertTitle>
