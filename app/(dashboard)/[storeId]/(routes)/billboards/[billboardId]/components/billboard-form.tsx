@@ -5,7 +5,7 @@ import * as z from "zod";
 import { Button } from "@/components/ui/button"
 import { Heading } from "@/components/ui/heading"
 import { Separator } from "@/components/ui/separator"
-import { Billboard, Store } from "@prisma/client"
+import { Billboard } from "@prisma/client"
 import { Trash } from "lucide-react"
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,7 +16,6 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { AlertModal } from "@/components/modals/alert-modal";
-import { ApiAlert } from "@/components/ui/api-alert";
 import { useOrigin } from "@/hooks/use-origin";
 import ImageUpload from "@/components/ui/image-upload";
 
@@ -63,9 +62,15 @@ export const BillboardForm: React.FC<BillboardFormProps> = (
     const onSubmit = async (data: BillboardFormValues)=>{
         try{
             setLoading(true)
-            await axios.patch(`/api/stores/${params.storeId}`, data)
+            if (initialData){
+            await axios.patch(`/api/${params.storeId}/billboards/${params.billboardId}`, data)
+            } else {
+            await axios.post(`/api/${params.storeId}/billboards`, data)
+            }
+            
             router.refresh()
-            toast.success("Store updated!")
+            router.push(`/${params.storeId}/billboards`)
+            toast.success(toastMessage)
         }catch(error){
             toast.error("Internal error.")
         } finally {
@@ -77,12 +82,12 @@ export const BillboardForm: React.FC<BillboardFormProps> = (
     const onDelete = async () => {
         try{
             setLoading(true)
-            axios.delete(`/api/stores/${params.storeId}`)
+            axios.delete(`/api/${params.storeId}/billboards/${params.billboardId}`)
             router.refresh()
             router.push("/")
             toast.success("Store deleted")
         } catch(error){
-            toast.error("Make sure you removed all products and categories before deleting the store.")
+            toast.error("Make sure you removed all categories before deleting the billboard.")
         } finally {
             setLoading(false)
             setOpen(false)
@@ -118,7 +123,7 @@ export const BillboardForm: React.FC<BillboardFormProps> = (
             className="space-y-8 w-full">
                 <FormField
                         control={form.control}
-                        name="label"
+                        name="imageUrl"
                         render={({field})=>(
                         <FormItem>
                             <FormLabel>Background image</FormLabel>
