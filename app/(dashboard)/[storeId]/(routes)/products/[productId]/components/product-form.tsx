@@ -10,7 +10,7 @@ import { Trash } from "lucide-react"
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
 import axios from "axios";
@@ -19,6 +19,7 @@ import { AlertModal } from "@/components/modals/alert-modal";
 import { useOrigin } from "@/hooks/use-origin";
 import ImageUpload from "@/components/ui/image-upload";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const formSchema = z.object({
     name: z.string().min(1),
@@ -82,6 +83,8 @@ export const ProductForm: React.FC<ProductFormProps> = (
     
     const onSubmit = async (data: ProductFormValues)=>{
         try{
+            console.log(data);
+            
             setLoading(true)
             if (initialData){
             await axios.patch(`/api/${params.storeId}/products/${params.productId}`, data)
@@ -99,16 +102,15 @@ export const ProductForm: React.FC<ProductFormProps> = (
         }
     }
 
-
     const onDelete = async () => {
         try{
             setLoading(true)
             axios.delete(`/api/${params.storeId}/products/${params.productId}`)
             router.refresh()
             router.push(`${params.storeId}/products`)
-            toast.success("Store deleted")
+            toast.success("Producy deleted")
         } catch(error){
-            toast.error("Make sure you removed all categories before deleting the product.")
+            toast.error("Internal error.")
         } finally {
             setLoading(false)
             setOpen(false)
@@ -152,10 +154,15 @@ export const ProductForm: React.FC<ProductFormProps> = (
                                 <ImageUpload 
                                     value={field.value.map((image) => image.url)}
                                     disabled={loading}
-                                    onChange={(url)=> field.onChange([...field.value, {url}])}
+                                    onChange={(url) => { 
+                                        const currentImages = form.getValues("images"); 
+                                        const newImage = { url: url }; 
+                                        const updatedImages = [...currentImages, newImage]; 
+                                        form.setValue("images", updatedImages, { shouldValidate: true }); 
+                                        console.log("Updated images:", updatedImages); }}
                                     onRemove={(url)=> field.onChange(
                                         [...field.value.filter((current) => current.url !== url)]
-                                    )}
+                                  )}
                                 />
                             </FormControl>
                             <FormMessage />
@@ -294,6 +301,51 @@ export const ProductForm: React.FC<ProductFormProps> = (
                                 </SelectContent>
                             </Select>
                             <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+                    
+                    <FormField
+                        control={form.control}
+                        name="isFeatured"
+                        render={({field})=>(
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md p-4 border">
+                            <FormControl>
+                                <Checkbox 
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                    />
+                            </FormControl>
+                            <div className="space-y-1 leading-none">
+                                <FormLabel>
+                                    Featured
+                                </FormLabel>
+                                <FormDescription>
+                                    This product will appear on the home page
+                                </FormDescription>
+                            </div>
+                        </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="isArchived"
+                        render={({field})=>(
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md p-4 border">
+                            <FormControl>
+                                <Checkbox 
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                    />
+                            </FormControl>
+                            <div className="space-y-1 leading-none">
+                                <FormLabel>
+                                    Arhived
+                                </FormLabel>
+                                <FormDescription>
+                                    This product will be hidden from the store
+                                </FormDescription>
+                            </div>
                         </FormItem>
                         )}
                     />
